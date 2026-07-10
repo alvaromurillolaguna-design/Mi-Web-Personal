@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina Web personal</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+    <style>
+        /* Estilo base gaming/oscuro */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ff0000;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- CINTA EN CONSTRUCCIÓN --- */
+        .cinta-construccion {
+            width: 100%;
+            background: repeating-linear-gradient(
+                -45deg,
+                #ff0000,
+                #f1c40f 20px,
+                #1a1a1a 20px,
+                #1a1a1a 40px
+            );
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0px #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border-bottom: 3px solid #f39c12;
+            z-index: 1000;
+        }
+        
+        .contenedor {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        header {
+            border-bottom: 2px solid #33ff33;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        h1 { color: #ffffff; margin-bottom: 5px; font-size: 2.2rem; font-weight: bold; }
+        header p { color: #89ddff; margin: 0; }
+        
+        /* Cuadrícula de 3 bloques funcionales */
+        .cuadricula-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .seccion {
+            background-color: #000000;
+            padding: 25px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;    
+            justify-content: flex-start;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .seccion:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(247, 159, 199, 0.25);
+        }
+        
+        .seccion h2 { 
+            color: #09ff00; 
+            margin-top: 0;
+            margin-bottom: 20px; 
+            font-size: 1.3rem; 
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .seccion p, .seccion ul {
+            color: #ffffff;
+            margin-top: 5px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        a { color: #eeeeee; text-decoration: none; font-weight: 500; cursor: pointer; }
+        a:hover { text-decoration: underline; color: #89ddff; }
+        ul { list-style: none; padding: 0; margin: 0; width: 100%; }
+        li { margin-bottom: 10px; text-align: left; width: 100%; display: flex; justify-content: center; align-items: center; }
+
+        /* Contador */
+        .numero-contador {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #9ece6a;
+            margin: 10px 0 20px 0;
+        }
+        .btn-gaming {
+            background: linear-gradient(135deg, #7aa2f7, #89ddff);
+            color: #16162a;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #41a7f4;
+            width: 85%;
+            transition: transform 0.1s;
+        }
+        .btn-gaming:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #41a7f4;
+        }
+        .btn-reset {
+            background: transparent;
+            color: #565f89;
+            border: 1px solid #414868;
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        .btn-reset:hover { color: #f7768e; border-color: #f7768e; }
+
+        /* Tareas */
+        .lista-tareas {
+            text-align: left;
+            width: 100%;
+        }
+        .tarea-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+        .tarea-item input {
+            cursor: pointer;
+            accent-color: #bebc22;
+            transform: scale(1.2);
+        }
+
+        /* --- ASISTENTE CHATBOT --- */
+        .asistente-contenedor {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 9999;
+            font-family: sans-serif;
+        }
+
+        .asistente-circulo {
+            width: 65px;
+            height: 65px;
+            background: radial-gradient(circle, #ff6b6b 0%, #c92a2a 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ff6b6b, 0 4px 15px rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: flotarAsistente 3s ease-in-out infinite;
+        }
+        .asistente-circulo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #ff6b6b;
+        }
+
+        @keyframes flotarAsistente {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .asistente-panel {
+            width: 360px;
+            background-color: #11121c;
+            border: 2px solid #ff6b6b;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            margin-bottom: 15px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .asistente-cabecera {
+            background-color: #16162a;
+            padding: 12px;
+            border-bottom: 1px solid #414868;
+            font-weight: bold;
+            color: #ff8787;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-cerrar-panel {
+            background: transparent;
+            border: none;
+            color: #f7768e;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .terminal-box {
+            width: 100%;
+            background-color: #16162a;
+            color: #ffffff;
+            padding: 12px;
+            box-sizing: border-box;
+            height: 280px;
+            font-size: 0.85rem;
+            text-align: left;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+        
+        .terminal-box b { color: #ff8787; }
+
+        .terminal-input-container {
+            display: flex;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #11121c;
+            gap: 5px;
+        }
+        .terminal-input {
+            flex: 1;
+            background-color: #16162a;
+            border: 1px solid #414868;
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .terminal-input:focus { border-color: #ff6b6b; }
+        .terminal-btn {
+            background-color: #7aa2f7;
+            border: none;
+            color: #16162a;
+            padding: 0 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .terminal-btn:disabled {
+            background-color: #414868;
+            cursor: not-allowed;
+        }
+
+        /* --- CONTENEDOR ARCADE --- */
+        .contenedor-juego {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            margin-bottom: 40px;
+        }
+        .pantalla-crt {
+            position: relative;
+            padding: 15px;
+            background-color: #1c1c24 !important;
+            border-radius: 15px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1), 0 0 30px rgba(51, 255, 51, 0.2);
+        }
+        #tablero { 
+            border: 4px solid #33ff33; 
+            background-color: #000000 !important;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cinta-construccion">
+        ⚠️ SITIO EN CONSTRUCCIÓN • UNDER CONSTRUCTION ⚠️
+    </div>
+
+    <div class="contenedor">
+        <header>
+            <h1>Bienvenido a tu página web , Álvaro disfruta</h1>
+            <p>Este es tu rincon privado  totalmente gratis</p>
+        </header>
+
+        <main>
+            <div class="cuadricula-3">
+                <div class="seccion">
+                    <h2>🎮 Contador Gaming</h2>
+                    <div class="numero-contador" id="contador">0</div>
+                    <button class="btn-gaming" id="btnClick">¡PULSAR!</button>
+                    <button class="btn-reset" id="btnReset">Reiniciar</button>
+                </div>
+
+                <div class="seccion">
+                    <h2>🔗 Enlaces Rápidos</h2>
+                    <ul>
+                        <li><a href="https://open.spotify.com" target="_blank">🎵 Spotify Web</a></li>
+                        <li><a href="https://youtube.com" target="_blank">📺 YouTube</a></li>
+                        <li><a href="https://gmail.com" target="_blank">✉️ Gmail</a></li>
+                        <li><a href="file:///D:/" target="_blank">💾 Ver Disco Duro (D:)</a></li>
+                    </ul>
+                </div>
+
+                <div class="seccion">
+                    <h2>📅 Tareas Gaming</h2>
+                    <div class="lista-tareas">
+                        <label class="tarea-item">
+                            <input type="checkbox">
+                            <span>Completar el pase de batalla.</span>
+                        </label>
+                        <label class="tarea-item">
+                            <input type="checkbox">
+                            <span>Subir el contador a 500 clics.</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASISTENTE CHATBOT CON LOGO ROBOT -->
+            <div class="asistente-contenedor">
+                <div class="asistente-panel" id="asistentePanel">
+                    <div class="asistente-cabecera">
+                        <span>🤖 Chatbot</span>
+                        <button class="btn-cerrar-panel" id="btnCerrarPanel">✖</button>
+                    </div>
+                    <div class="terminal-box" id="terminalBox">
+                        <b>Chatbot:</b> ¡Qué pasa! Aquí estoy al pie del cañón. Pídeme que te resuma un tema tostón, te resuelva una duda chunga de clase o búscame lo que quieras. ¡Vamos a por ello!
+                        <br><br><small style="color:#ffcc00">⚠️ Nota: Recuerda poner tu API Key en el código para que pueda hablar contigo.</small>
+                    </div>
+                    <div class="terminal-input-container">
+                        <input type="text" class="terminal-input" id="terminalInput" placeholder="Dime qué estás estudiando hoy...">
+                        <button class="terminal-btn" id="terminalBtn">></button>
+                    </div>
+                </div>
+                <div class="asistente-circulo" id="btnAsistente" title="Hablar con tu chatbot">🤖</div>
+            </div>
+
+            <div class="contenedor-juego">
+                <div class="pantalla-crt">
+                    <canvas id="tablero"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPT DE INTELIGENCIA ARTIFICIAL -->
+     <script>
+        // PEGA AQUÍ TU API KEY ENTRE LAS COMILLAS
+        const API_KEY = "AQ.Ab8RN6LsWT2l_b_MaXVigiN_41eWvYWarQTREigtyuVTng828A"; 
+
+        const terminalInput = document.getElementById('terminalInput');
+        const terminalBox = document.getElementById('terminalBox');
+        const terminalBtn = document.getElementById('terminalBtn');
+        const asistentePanel = document.getElementById('asistentePanel');
+        const btnAsistente = document.getElementById('btnAsistente');
+        const btnCerrarPanel = document.getElementById('btnCerrarPanel');
+
+        // ... (el resto de tus listeners de botones se mantienen igual) ...
+
+        async function consultarGemini() {
+            const consulta = terminalInput.value.trim();
+            if (!consulta) return;
+
+            // Verificar si olvidaste poner la clave
+            if (API_KEY === "PEGA_AQUÍ_TU_CLAVE_DE_GOOGLE_AI_STUDIO") {
+                alert("Error: Por favor, pega tu API Key en la variable API_KEY dentro del código.");
+                return;
+            }
+
+            try {
+                terminalBtn.disabled = true;
+                terminalInput.disabled = true;
+                terminalBox.innerHTML += `<br><br><b>Tú:</b> ${consulta}`;
+                terminalBox.innerHTML += `<br><b id="loading">Chatbot:</b> Pensando...`;
+                terminalBox.scrollTop = terminalBox.scrollHeight;
+
+                const respuestaRaw = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: consulta }] }]
+                    })
+                });
+
+                const datos = await respuestaRaw.json();
+                const loadingText = document.getElementById('loading');
+                if (loadingText) loadingText.removeAttribute('id');
+
+                if (datos.candidates && datos.candidates[0].content.parts[0].text) {
+                    let respuestaIA = datos.candidates[0].content.parts[0].text;
+                    respuestaIA = respuestaIA.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                    terminalBox.innerHTML = terminalBox.innerHTML.replace("Pensando...", respuestaIA);
+                } else {
+                    terminalBox.innerHTML = terminalBox.innerHTML.replace("Pensando...", "Vaya, parece que no he recibido una respuesta válida. ¿Revisaste tu API Key?");
+                }
+            } catch (error) {
+                terminalBox.innerHTML = terminalBox.innerHTML.replace("Pensando...", "Error de conexión: " + error.message);
+            } finally {
+                terminalBtn.disabled = false;
+                terminalInput.disabled = false;
+                terminalInput.value = "";
+                terminalBox.scrollTop = terminalBox.scrollHeight;
+            }
+        }
+
+        terminalBtn.addEventListener('click', consultarGemini);
+        terminalInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') consultarGemini(); });
+    </script>
+   
+
+    <!-- SISTEMA DEL CONTADOR DE CLICS -->
+    <script>
+        let clicks = localStorage.getItem('contadorGaming') ? parseInt(localStorage.getItem('contadorGaming')) : 0;
+        const contadorTxt = document.getElementById('contador');
+        contadorTxt.innerText = clicks;
+
+        document.getElementById('btnClick').addEventListener('click', () => {
+            clicks++;
+            contadorTxt.innerText = clicks;
+            localStorage.setItem('contadorGaming', clicks);
+        });
+
+        document.getElementById('btnReset').addEventListener('click', () => {
+            if(confirm('¿Reiniciar contador?')) {
+                clicks = 0;
+                contadorTxt.innerText = clicks;
+                localStorage.setItem('contadorGaming', clicks);
+            }
+        });
+    </script>
+
+    <!-- CORE DE VIDEOJUEGOS MULTI-ARCADE (TETRIS & SPACE INVADERS PRO) -->
+    <script>
+        const canvas = document.getElementById('tablero');
+        const context = canvas.getContext('2d');
+        const TAMANO_FUENTE = 26; const COLUMNAS = 10; const FILAS = 20;
+        canvas.width = 960; canvas.height = (FILAS + 3) * TAMANO_FUENTE;
+        const BIEN_X = 340; const BIEN_Y = 40;
+        let audioCtx = null;
+
+        function iniciarAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        function pitar(frecuencia, duracion, tipo = 'square', volumen = 0.1) {
+            if (!audioCtx) return;
+            try {
+                let osc = audioCtx.createOscillator(); let gainNode = audioCtx.createGain();
+                osc.type = tipo; osc.frequency.setValueAtTime(frecuencia, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(volumen, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duracion);
+                osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + duracion);
+            } catch(e) {}
+        }
+
+        function sonidoMenu() { pitar(600, 0.05, 'square', 0.05); }
+        function sonidoAceptar() { pitar(400, 0.08, 'square', 0.08); setTimeout(() => pitar(800, 0.15, 'square', 0.08), 80); }
+        function sonidoMover() { pitar(150, 0.03, 'triangle', 0.15); }
+        function sonidoRotar() { pitar(350, 0.05, 'square', 0.08); }
+        function sonidoLinea() { pitar(600, 0.1, 'square', 0.1); }
+        function sonidoGameOver() { pitar(400, 0.2, 'square', 0.1); }
+
+        // --- SISTEMA GENERAL DE MENÚS Y ESTADOS ---
+        let estadoActual = 'PORTADA'; let seleccionMenu = 0;
+        const OPCIONES_MENU = ["JUGAR TETRIS", "JUGAR SPACE INVADERS", "VER CONTROLES", "APAGAR SISTEMA"];
+
+        // --- VARIABLES TETRIS ---
+        const PIEZAS = {
+            'I': [[0,0,0,0], [1,1,1,1], [0,0,0,0], [0,0,0,0]], 'L': [[0,0,1], [1,1,1], [0,0,0]], 'J': [[1,0,0], [1,1,1], [0,0,0]],
+            'O': [[1,1], [1,1]], 'Z': [[1,1,0], [0,1,1], [0,0,0]], 'S': [[0,1,1], [1,1,0], [0,0,0]], 'T': [[0,1,0], [1,1,1], [0,0,0]]
+        };
+        const tablero_tetris = Array.from({ length: FILAS }, () => Array(COLUMNAS).fill('.'));
+        let lineasAnimando = []; let contadorAnimacionLinea = 0;
+        let pieza = { matriz: PIEZAS['T'], pos: {x: 3, y: 0} };
+        let lineas = 0; let nivel = 1; let puntos = 0;
+        let contadorCaida = 0; let intervaloCaida = 600; let tiempoUltimo = 0;
+
+        // --- VARIABLES SPACE INVADERS ---
+        let naveX = 4; 
+        let balas = []; 
+        let enemigos = []; 
+        let enemigosDireccion = 1; 
+        let contadorMoverEnemigos = 0;
+        let partidaGanada = false;
+        let nivelInvaders = 1;
+
+        function reiniciarJuegoTetris() {
+            tablero_tetris.forEach(fila => fila.fill('.'));
+            lineas = 0; puntos = 0; nivel = 1; intervaloCaida = 600; estadoActual = 'JUEGO_TETRIS'; generarNuevaPieza();
+        }
+
+        function iniciarSpaceInvaders() {
+            naveX = 4; balas = []; enemigos = []; enemigosDireccion = 1; partidaGanada = false;
+            if (estadoActual !== 'JUEGO_INVADERS') {
+                nivelInvaders = 1;
+                puntos = 0;
+            }
+            // Crear oleada de enemigos marcianos
+            for (let f = 0; f < 3; f++) {
+                for (let c = 1; c < 8; c++) { enemigos.push({ x: c, y: f + 2, vivo: true }); }
+            }
+            estadoActual = 'JUEGO_INVADERS';
+        }
+
+        // --- LÓGICA INTERNA TETRIS ---
+        function fusionar(tablero, pieza) {
+            pieza.matriz.forEach((fila, y) => { fila.forEach((valor, x) => { if (valor !== 0) { if (tablero[y + pieza.pos.y]) tablero[y + pieza.pos.y][x + pieza.pos.x] = '[]'; } }); });
+        }
+        function comprobarLineas() {
+            lineasAnimando = []; for (let y = FILAS - 1; y >= 0; y--) { if (!tablero_tetris[y].includes('.')) lineasAnimando.push(y); }
+            if (lineasAnimando.length > 0) { contadorAnimacionLinea = 10; sonidoLinea(); }
+        }
+        function procesarBorradoReal() {
+            for (let y = FILAS - 1; y >= 0; y--) { if (!tablero_tetris[y].includes('.')) { tablero_tetris.splice(y, 1); tablero_tetris.unshift(Array(COLUMNAS).fill('.')); y++; } }
+            lineas += lineasAnimando.length; puntos += lineasAnimando.length * 100 * nivel;
+            nivel = Math.floor(lineas / 5) + 1; intervaloCaida = Math.max(100, 600 - (nivel * 50)); lineasAnimando = [];
+        }
+        function bajarPieza() {
+            if (lineasAnimando.length > 0 || estadoActual !== 'JUEGO_TETRIS') return;
+            pieza.pos.y++; if (detectarColision()) { pieza.pos.y--; fusionar(tablero_tetris, pieza); comprobarLineas(); if (lineasAnimando.length === 0) generarNuevaPieza(); }
+        }
+        function generarNuevaPieza() {
+            pieza.pos.y = 0; pieza.pos.x = 3;
+            if (detectarColision()) { sonidoGameOver(); alert("GAME OVER - Puntos: " + puntos); estadoActual = 'MENU'; }
+            else { const claves = Object.keys(PIEZAS); pieza.matriz = PIEZAS[claves[Math.floor(Math.random() * claves.length)]]; }
+        }
+        function detectarColision() {
+            const m = pieza.matriz; const o = pieza.pos;
+            for (let y = 0; y < m.length; ++y) {
+                for (let x = 0; x < m[y].length; ++x) { if (m[y][x] !== 0) { if (y + o.y >= FILAS || x + o.x < 0 || x + o.x >= COLUMNAS || tablero_tetris[y + o.y][x + o.x] === '[]') return true; } }
+            } return false;
+        }
+        function rotate(matriz) { const nuevaMatriz = matriz[0].map((_, i) => matriz.map(fila => fila[i])); return nuevaMatriz.map(fila => fila.reverse()); }
+
+        // --- EVENTOS DE TECLADO ---
+        document.addEventListener('keydown', evento => {
+            const tecla = evento.key; iniciarAudio();
+            if(document.activeElement === terminalInput) return;
+
+            if (estadoActual === 'PORTADA') { sonidoAceptar(); estadoActual = 'MENU'; return; }
+            if (estadoActual === 'CONTROLES' || estadoActual === 'APAGADO') { if (tecla.toLowerCase() === 'r' || tecla === 'Escape' || tecla === 'Enter') { sonidoAceptar(); estadoActual = 'MENU'; } return; }
+            
+            if (estadoActual === 'MENU') {
+                if (tecla === 'ArrowUp') { seleccionMenu = (seleccionMenu - 1 + OPCIONES_MENU.length) % OPCIONES_MENU.length; sonidoMenu(); }
+                else if (tecla === 'ArrowDown') { seleccionMenu = (seleccionMenu + 1) % OPCIONES_MENU.length; sonidoMenu(); }
+                else if (tecla === 'Enter') {
+                    sonidoAceptar();
+                    if (seleccionMenu === 0) reiniciarJuegoTetris();
+                    else if (seleccionMenu === 1) iniciarSpaceInvaders();
+                    else if (seleccionMenu === 2) estadoActual = 'CONTROLES';
+                    else if (seleccionMenu === 3) estadoActual = 'APAGADO';
+                }
+                return;
+            }
+
+            if (tecla === 'Escape') { sonidoAceptar(); estadoActual = 'MENU'; return; }
+
+            if (estadoActual === 'JUEGO_TETRIS') {
+                if (tecla === 'ArrowLeft') { pieza.pos.x--; if (detectarColision()) pieza.pos.x++; else sonidoMover(); }
+                else if (tecla === 'ArrowRight') { pieza.pos.x++; if (detectarColision()) pieza.pos.x--; else sonidoMover(); }
+                else if (tecla === 'ArrowDown') { bajarPieza(); sonidoMover(); }
+                else if (tecla === 'ArrowUp') { const mA = pieza.matriz; pieza.matriz = rotate(pieza.matriz); if (detectarColision()) pieza.matriz = mA; else sonidoRotar(); }
+            }
+
+            if (estadoActual === 'JUEGO_INVADERS') {
+                if (tecla === 'ArrowLeft' && naveX > 0) { naveX--; sonidoMover(); }
+                else if (tecla === 'ArrowRight' && naveX < COLUMNAS - 2) { naveX++; sonidoMover(); }
+                else if (tecla === 'ArrowUp' || tecla === ' ') { 
+                    // CORRECCIÓN: El disparo ahora sale exactamente alineado con el cañón '▄' (naveX + 0, pero centrado visualmente)
+                    balas.push({ x: naveX, y: FILAS - 3 }); 
+                    pitar(800, 0.05, 'triangle', 0.05); 
+                }
+            }
+        });
+
+        // --- MOTOR GRÁFICO (DIBUJAR) ---
+        function dibujarInterfaz() {
+            context.fillStyle = '#000000'; context.fillRect(0, 0, canvas.width, canvas.height);
+            context.shadowBlur = 8; context.shadowColor = "#33ff33"; context.fillStyle = '#33ff33';
+
+            if (estadoActual === 'PORTADA') {
+                context.font = "bold 50px 'Courier New'"; context.fillText("ARCADE CONSOLE", 260, 220);
+                context.font = "bold 24px 'Courier New'"; context.fillText("TETRIS & INVADERS SYSTEM", 310, 280);
+                if (Math.floor(Date.now() / 500) % 2 === 0) context.fillText("PULSA CUALQUIER TECLA PARA CONTINUAR", 220, 420);
+                context.shadowBlur = 0; return;
+            }
+            if (estadoActual === 'MENU') {
+                context.font = "bold 36px 'Courier New'"; context.fillText("SISTEMA CENTRAL", 340, 130);
+                context.font = "bold 26px 'Courier New'";
+                for (let i = 0; i < OPCIONES_MENU.length; i++) {
+                    if (i === seleccionMenu) context.fillText(`> ${OPCIONES_MENU[i]} <`, 290, 240 + (i * 60));
+                    else context.fillText(`  ${OPCIONES_MENU[i]}  `, 290, 240 + (i * 60));
+                }
+                context.shadowBlur = 0; return;
+            }
+            if (estadoActual === 'CONTROLES') {
+                context.font = "bold 32px 'Courier New'"; context.fillText("CONTROLES DEL SISTEMA", 280, 100);
+                context.font = "20px 'Courier New'";
+                context.fillText("🎮 EN TETRIS: [← / →] Mover, [↑] Rotar, [↓] Bajar rápido", 160, 200);
+                context.fillText("🚀 EN SPACE INVADERS: [← / →] Mover, [↑ o ESPACIO] Disparar", 160, 260);
+                context.fillText("⚙️ GENERAL: [ESC] para salir del juego al Menú", 160, 320);
+                context.fillText("Pulsa [ENTER] para volver al menú principal", 240, 480);
+                context.shadowBlur = 0; return;
+            }
+            if (estadoActual === 'APAGADO') {
+                context.font = "bold 26px 'Courier New'"; context.fillText("TERMINAL EN REPOSO", 350, 260); context.fillText("PULSA [R] PARA REINICIAR", 320, 320);
+                context.shadowBlur = 0; return;
+            }
+
+            // Marcador lateral general
+            context.font = `bold ${TAMANO_FUENTE}px 'Courier New'`;
+            context.fillText(`SCORE: ${puntos}`, 20, 100);
+            if (estadoActual === 'JUEGO_INVADERS') {
+                context.fillText(`WAVE:  ${nivelInvaders}`, 20, 140);
+            }
+            context.fillText("[ESC] MENU", 20, 200);
+
+            // DIBUJAR TETRIS
+            if (estadoActual === 'JUEGO_TETRIS') {
+                for (let y = 0; y < FILAS; y++) {
+                    let lineaTexto = "<!"; let estaBrillando = lineasAnimando.includes(y) && (contadorAnimacionLinea % 2 === 0);
+                    for (let x = 0; x < COLUMNAS; x++) {
+                        let esPieceActiva = false; const py = y - pieza.pos.y; const px = x - pieza.pos.x;
+                        if (py >= 0 && py < pieza.matriz.length && px >= 0 && px < pieza.matriz[py].length) { if (pieza.matriz[py][px] !== 0) esPieceActiva = true; }
+                        if (estaBrillando) lineaTexto += "##"; else if (esPieceActiva || tablero_tetris[y][x] === '[]') lineaTexto += "[]"; else lineaTexto += " .";
+                    }
+                    lineaTexto += "!>"; context.fillText(lineaTexto, BIEN_X, BIEN_Y + (y * TAMANO_FUENTE));
+                }
+            }
+
+            // DIBUJAR SPACE INVADERS
+            if (estadoActual === 'JUEGO_INVADERS') {
+                let matrizInvaders = Array.from({ length: FILAS }, () => Array(COLUMNAS).fill(' .'));
+                
+                // Balas
+                balas.forEach(b => { if (b.y >= 0 && b.y < FILAS) matrizInvaders[b.y][b.x] = ' ¦'; });
+
+                // Extraterrestres
+                enemigos.forEach(e => { if (e.vivo && e.y < FILAS) matrizInvaders[e.y][e.x] = '👾'; });
+
+                // NAVE CLÁSICA ARCADE ORIGINAL (Base de 3 bloques con cañón central)
+                matrizInvaders[FILAS - 3][naveX] = ' ▄'; 
+                matrizInvaders[FILAS - 2][naveX] = '██'; 
+                if (naveX < COLUMNAS - 1) matrizInvaders[FILAS - 2][naveX + 1] = '█ ';
+
+                // Renderizar la matriz en pantalla
+                for (let y = 0; y < FILAS; y++) {
+                    let lineaTexto = "<!";
+                    for (let x = 0; x < COLUMNAS; x++) { lineaTexto += matrizInvaders[y][x]; }
+                    lineaTexto += "!>";
+                    context.fillText(lineaTexto, BIEN_X, BIEN_Y + (y * TAMANO_FUENTE));
+                }
+
+                if (partidaGanada) { context.fillText("¡WAVE COMPLETADA!", 20, 260); }
+            }
+
+            context.fillText("<" + "=".repeat(COLUMNAS * 2) + ">", BIEN_X, BIEN_Y + (FILAS * TAMANO_FUENTE));
+            context.fillText("\\" + "/".repeat(COLUMNAS * 2) + "/", BIEN_X, BIEN_Y + ((FILAS + 1) * TAMANO_FUENTE));
+            context.shadowBlur = 0;
+        }
+
+        // --- INTERRUPTOR DE JUEGOS Y ACTUALIZADOR (GAME LOOP) ---
+        function actualizar(tiempo = 0) {
+            const tiempoDiferencia = tiempo - tiempoUltimo; tiempoUltimo = tiempo;
+
+            if (estadoActual === 'JUEGO_TETRIS') {
+                if (lineasAnimando.length > 0) { const idAnim = Math.floor(contadorAnimacionLinea--); if (contadorAnimacionLinea <= 0) { procesarBorradoReal(); generarNuevaPieza(); } }
+                else { contadorCaida += tiempoDiferencia; if (contadorCaida > intervaloCaida) { bajarPieza(); contadorCaida = 0; } }
+            }
+
+            if (estadoActual === 'JUEGO_INVADERS') {
+                // Trayectoria del proyectil
+                balas.forEach(b => b.y--);
+                balas = balas.filter(b => b.y >= 0);
+
+                // Movimiento dinámico de la flota alienígena (Aumento de velocidad progresivo)
+                contadorMoverEnemigos += tiempoDiferencia;
+                let velocidadAliens = Math.max(150, 900 - (nivelInvaders * 35)); 
+                if (contadorMoverEnemigos > velocidadAliens) {
+                    let cambiarDireccion = false;
+                    enemigos.forEach(e => {
+                        if (e.vivo) {
+                            e.x += enemigosDireccion;
+                            if (e.x >= COLUMNAS || e.x < 0) cambiarDireccion = true;
+                        }
+                    });
+
+                    if (cambiarDireccion) {
+                        enemigosDireccion *= -1;
+                        enemigos.forEach(e => { if (e.vivo) { e.x += enemigosDireccion; e.y++; } });
+                    }
+                    contadorMoverEnemigos = 0;
+                }
+
+                // Sistema de colisiones (Disparo destruye marciano)
+                balas.forEach(b => {
+                    enemigos.forEach(e => {
+                        // Se adapta la colisión al centro exacto del disparo
+                        if (e.vivo && (e.x === b.x || e.x === b.x - 1 || e.x === b.x + 1) && (e.y === b.y || e.y === b.y + 1)) {
+                            e.vivo = false; b.y = -1; puntos += 50 * nivelInvaders;
+                            pitar(300, 0.05, 'square', 0.06);
+                        }
+                    });
+                });
+
+                // Comprobar si has limpiado la oleada actual
+                let vivos = enemigos.filter(e => e.vivo);
+                if (vivos.length === 0 && !partidaGanada) {
+                    partidaGanada = true;
+                    puntos += 500 * nivelInvaders; 
+                    nivelInvaders++;
+                    pitar(900, 0.1, 'square', 0.1);
+                    setTimeout(() => pitar(1200, 0.15, 'square', 0.1), 100);
+                    setTimeout(() => { iniciarSpaceInvaders(); }, 600);
+                }
+                
+                // Comprobar Game Over (Si los aliens bajan demasiado)
+                vivos.forEach(e => {
+                    if (e.y >= FILAS - 3) { 
+                        sonidoGameOver(); 
+                        alert("LA FLOTA ALIENÍGENA HA DESTRUIDO LA BASE. GAME OVER."); 
+                        estadoActual = 'MENU'; 
+                    }
+                });
+            }
+
+            dibujarInterfaz(); 
+            requestAnimationFrame(actualizar);
+        }
+        
+        actualizar();
+    </script>
+</body>
+</html>
